@@ -10,7 +10,7 @@ int * * getAdjMatrix(int * size)
 {
 	int num, i, j;
 	char flag = 1;
-	char * temp = malloc(sizeof(char) * 10); /*integer cannot be over 10 digits long*/
+	char * temp = malloc(sizeof(char) * 11); /*integer cannot be over 10 digits long*/
 	int * * adj_mat;
 
 	do
@@ -18,7 +18,6 @@ int * * getAdjMatrix(int * size)
 		printf("Enter number of towns:\n");
 		scanf("%s", temp);
 		num = atoi(temp);
-		printf("num is: %d\n", num);
 		if(num <= 0)
 		{
 			flag = 0;
@@ -26,14 +25,14 @@ int * * getAdjMatrix(int * size)
 		}
 		else
 		{
-			adj_mat = malloc(sizeof(int *) * (num));
+			adj_mat = malloc(sizeof(int *) * (num - 1));
 			printf("Enter adjacency matrix:\n");
 
-			for(i = 1; i < num; i++)
+			for(i = 0; i < (num - 1); i++)
 			{
-				adj_mat[i] = malloc(sizeof(int) * num);
+				adj_mat[i] = (int *) calloc((i + 1), sizeof(int) * (i + 1));
 
-				for(j = 0; j < i; j++)
+				for(j = 0; j <= i; j++)
 				{
 					scanf("%s", temp);
 					adj_mat[i][j] = atoi(temp);
@@ -51,7 +50,6 @@ int * * getAdjMatrix(int * size)
 			}
 		}
 	} while(!flag);
-	adj_mat[0] = malloc(sizeof(int) * num);
 	* size = num;
 	free(temp);
 	return adj_mat;
@@ -60,9 +58,9 @@ int * * getAdjMatrix(int * size)
 void printAdjMatrix(int * * adj_mat, int size)
 {
 	int i, j;
-	for(i = 1; i < size; i++)
+	for(i = 0; i < (size - 1); i++)
 	{
-		for(j = 0; j < i; j++)
+		for(j = 0; j <= i; j++)
 		{
 			printf("%d, ", adj_mat[i][j]);
 		}
@@ -73,7 +71,7 @@ void printAdjMatrix(int * * adj_mat, int size)
 void destroyMatrix(int * * adj_mat, int size)
 {
 	int i;
-	for(i = 0; i < size; i++)
+	for(i = 0; i < (size - 1); i++)
 	{
 		free(adj_mat[i]);
 	}
