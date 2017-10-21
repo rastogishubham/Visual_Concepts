@@ -6,6 +6,7 @@
 int * * getAdjMatrix(int *);
 void printAdjMatrix(int * *, int);
 void destroyMatrix(int * *, int);
+int * * completeAdjMatrix(int * *, int);
 int findMinTime(int * *, int);
 int findMinDistNode(int *, int *, int);
 int findMaxDist(int *, int);
@@ -29,14 +30,14 @@ int * * getAdjMatrix(int * size)
 		}
 		else
 		{
-			adj_mat = malloc(sizeof(int *) * (num - 1));
+			adj_mat = malloc(sizeof(int *) * num);
 			printf("Enter adjacency matrix:\n");
 
-			for(i = 0; i < (num - 1); i++)
+			for(i = 1; i < num; i++)
 			{
-				adj_mat[i] = (int *) calloc((i + 1), sizeof(int) * (i + 1));
+				adj_mat[i] = (int *) calloc(num, sizeof(int) * num);
 
-				for(j = 0; j <= i; j++)
+				for(j = 0; j < i; j++)
 				{
 					scanf("%s", temp);
 					adj_mat[i][j] = atoi(temp);
@@ -54,17 +55,19 @@ int * * getAdjMatrix(int * size)
 			}
 		}
 	} while(!flag);
+	adj_mat[0] = (int *) calloc(num, sizeof(int) * num);
 	* size = num;
 	free(temp);
+	adj_mat = completeAdjMatrix(adj_mat, num);
 	return adj_mat;
 }
 
 void printAdjMatrix(int * * adj_mat, int size)
 {
 	int i, j;
-	for(i = 0; i < (size - 1); i++)
+	for(i = 0; i < size; i++)
 	{
-		for(j = 0; j <= i; j++)
+		for(j = 0; j < size; j++)
 		{
 			printf("%d, ", adj_mat[i][j]);
 		}
@@ -75,11 +78,24 @@ void printAdjMatrix(int * * adj_mat, int size)
 void destroyMatrix(int * * adj_mat, int size)
 {
 	int i;
-	for(i = 0; i < (size - 1); i++)
+	for(i = 0; i < size; i++)
 	{
 		free(adj_mat[i]);
 	}
 	free(adj_mat);
+}
+
+int * * completeAdjMatrix(int * * adj_mat, int size)
+{
+	int i, j;
+	for(i = 0; i < size; i++)
+	{
+		for(j = (size - 1); j > i; j--)
+		{
+			adj_mat[i][j] = adj_mat[j][i];
+		}
+	}
+	return adj_mat;
 }
 
 int findMinTime(int * * adj_mat, int size)
@@ -94,7 +110,7 @@ int findMinTime(int * * adj_mat, int size)
 	for(i = 0; i < (size - 1); i++)
 	{
 		minNode = findMinDistNode(distSet, visitSet, size);
-		visitSet[i] = 1;
+		visitSet[minNode] = 1;
 
 		for(j = 0; j < size; j++)
 		{
@@ -141,8 +157,7 @@ int main(int argc, char * * argv)
 {
 	int size, minTime;
 	int * * temp = getAdjMatrix(&size);
-	printf("size is: %d\n", size);
-	printAdjMatrix(temp, size);
+	/*printAdjMatrix(temp, size);*/
 	minTime = findMinTime(temp, size);
 	printf("The minimum time to get the message across is: %d\n", minTime);
 	destroyMatrix(temp, size);
