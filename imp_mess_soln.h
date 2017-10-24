@@ -21,7 +21,7 @@
    the distance set. We then repeat this process till we have visited all the
    nodes. At the end, we get the shortest distance (or time) from the source node
    to every other node. If we find the maximum from all of these, we will get the
-   minimum time the message takes to reach every city in the empire. */
+   minimum time the message takes to reach every city in the empire */
 
 /* This function returns the lower triangular portion 
    of the Adjacency matrix entered by the user */
@@ -43,18 +43,18 @@ int * * completeAdjMatrix(int * *, int);
 /* This function returns the minimum time the message
    from capitol city is received to every city in the 
    empire. It uses dijkstra's algorithm to find the 
-   smallest path from the source node (capitol city)
-   to every other city in the empire. */
+   smallest path from the source nod (capitol city)
+   to every other city in the empire */
 int findMinTime(int * *, int);
 
 /* This function returns next node to be visited in the 
    graph represented by the adjacency matrix. This is 
    required for the algorithm to find the shortest path
-   to all cities in the empire. */
+   to all cities in the empire */
 int findMinTimeNode(int *, int *, int);
 
 /* This function returns the maximum time from the 
    distance set. Therefore it returns the minimum
    time it will take for all cities to receive the
-   message*/
+   message /*/
 int findMaxTime(int *, int);
