@@ -2,6 +2,16 @@
 #include <stdlib.h>
 #include "imp_mess_soln.h"
 
+int main(int argc, char * * argv)
+{
+	int size, minTime;
+	int * * temp = getAdjMatrix(&size);
+	minTime = findMinTime(temp, size);
+	printf("The minimum time to get the message across is: %d\n", minTime);
+	destroyMatrix(temp, size);
+	return 0;
+}
+
 int * * getAdjMatrix(int * size)
 {
 	int num, i, j;
@@ -204,14 +214,4 @@ int findMaxTime(int * distSet, int size)
 			max = distSet[i];
 	}
 	return max;
-}
-
-int main(int argc, char * * argv)
-{
-	int size, minTime;
-	int * * temp = getAdjMatrix(&size);
-	minTime = findMinTime(temp, size);
-	printf("The minimum time to get the message across is: %d\n", minTime);
-	destroyMatrix(temp, size);
-	return 0;
 }
