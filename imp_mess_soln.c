@@ -1,28 +1,27 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <limits.h>
-
-int * * getAdjMatrix(int *);
-void printAdjMatrix(int * *, int);
-void destroyMatrix(int * *, int);
-int * * completeAdjMatrix(int * *, int);
-int findMinTime(int * *, int);
-int findMinDistNode(int *, int *, int);
-int findMaxDist(int *, int);
+#include "imp_mess_soln.h"
 
 int * * getAdjMatrix(int * size)
 {
 	int num, i, j;
 	char flag = 1;
-	char * temp = malloc(sizeof(char) * 11); /*integer cannot be over 10 digits long*/
-	int * * adj_mat;
 
+	/* integer cannot be over 10 digits long
+	   temp is used to store the string input
+	   from the user for error checking */
+	char * temp = malloc(sizeof(char) * 11);
+	int * * adj_mat;
+	/* A do while loop is used to accept input
+	   till the input is correct */
 	do
 	{
 		printf("Enter number of towns:\n");
 		scanf("%s", temp);
 		num = atoi(temp);
+		/* If the value of atoi is 0 then it can be an ivalid input,
+		   if the number entered is 0 or less than 0, that is invalid
+		   as well */
 		if(num <= 0)
 		{
 			flag = 0;
@@ -35,6 +34,9 @@ int * * getAdjMatrix(int * size)
 
 			for(i = 1; i < num; i++)
 			{
+				/* calloc is used to set every index to zero, this
+				   is advantageous because the time from one city
+				   to itself has to be zero */
 				adj_mat[i] = (int *) calloc(num, sizeof(int) * num);
 
 				for(j = 0; j < i; j++)
@@ -42,13 +44,20 @@ int * * getAdjMatrix(int * size)
 					scanf("%s", temp);
 					adj_mat[i][j] = atoi(temp);
 
-					if(adj_mat[i][j] < 1 && strcmp(temp, "x") != 0)
+					/* If the user inputs a number which is less than
+					   or equal to 0 or it is not an x (since an x 
+					   would cause atoi to return 0 as well, I have
+					   to use and && in the if condition) */
+					if(adj_mat[i][j] <= 0 && strcmp(temp, "x") != 0)
 					{
 						printf("Incorrect input, try again\n");
 						i = num;
 						flag = 0;
 						break;
 					}
+					/* if the user enters x, then the adjacency matrix
+					   uses -1 to represent that a message cannot travel
+					   between those two cities */
 					else if(!strcmp(temp, "x"))
 						adj_mat[i][j] = -1;
 				}
@@ -109,7 +118,7 @@ int findMinTime(int * * adj_mat, int size)
 		distSet[i] = INT_MAX;
 	for(i = 0; i < (size - 1); i++)
 	{
-		minNode = findMinDistNode(distSet, visitSet, size);
+		minNode = findMinTimeNode(distSet, visitSet, size);
 		visitSet[minNode] = 1;
 
 		for(j = 0; j < size; j++)
@@ -122,13 +131,13 @@ int findMinTime(int * * adj_mat, int size)
 		}
 	}
 
-	minTime = findMaxDist(distSet, size);
+	minTime = findMaxTime(distSet, size);
 	free(distSet);
 	free(visitSet);
 	return minTime;
 }
 
-int findMinDistNode(int * distSet, int * visitSet, int size)
+int findMinTimeNode(int * distSet, int * visitSet, int size)
 {
 	int i, minNode, min = INT_MAX;
 	for(i = 0; i < size; i++)
@@ -142,7 +151,7 @@ int findMinDistNode(int * distSet, int * visitSet, int size)
 	return minNode;
 }
 
-int findMaxDist(int * distSet, int size)
+int findMaxTime(int * distSet, int size)
 {
 	int i, max = INT_MIN;
 	for(i = 0; i < size; i++)
