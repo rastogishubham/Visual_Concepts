@@ -13,4 +13,4 @@ clean:
 	rm ImportantMessage
 
 tar:
-	tar czvf imp_mess_soln.tar imp_mess_soln.* makefile
+	tar czvf imp_mess_soln.tar imp_mess_soln.* makefile README.md
