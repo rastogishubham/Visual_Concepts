@@ -6,6 +6,8 @@ int main(int argc, char * * argv)
 {
 	int size, minTime;
 	int * * temp = getAdjMatrix(&size);
+	if(temp == NULL)
+		return 0;
 	minTime = findMinTime(temp, size);
 	printf("The minimum time to get the message across is: %d\n", minTime);
 	destroyMatrix(temp, size);
@@ -15,67 +17,59 @@ int main(int argc, char * * argv)
 int * * getAdjMatrix(int * size)
 {
 	int num, i, j;
-	char flag = 1;
 
 	/* integer cannot be over 10 digits long
 	   temp is used to store the string input
 	   from the user for error checking */
 	char * temp = malloc(sizeof(char) * 11);
 	int * * adj_mat;
-	/* A do while loop is used to accept input
-	   till the input is correct */
-	do
+
+	printf("Enter number of towns:\n");
+	scanf("%s", temp);
+	num = atoi(temp);
+	/* If the value of atoi is 0 then it can be an ivalid input,
+	   if the number entered is 0 or less than 0, that is invalid
+	   as well */
+	if(num <= 0)
 	{
-		printf("Enter number of towns:\n");
-		scanf("%s", temp);
-		num = atoi(temp);
-		/* If the value of atoi is 0 then it can be an ivalid input,
-		   if the number entered is 0 or less than 0, that is invalid
-		   as well */
-		if(num <= 0)
-		{
-			flag = 0;
-			printf("Incorrect input, try again\n");
-		}
-		else
-		{
-			adj_mat = malloc(sizeof(int *) * num);
-			printf("Enter adjacency matrix:\n");
+		printf("Incorrect input, try again\n");
+		return NULL;
+	}
+	else
+	{
+		adj_mat = malloc(sizeof(int *) * num);
+		printf("Enter adjacency matrix:\n");
 
-			for(i = 1; i < num; i++)
+		for(i = 1; i < num; i++)
+		{
+			/* calloc is used to set every index to zero, this
+			   is advantageous because the time from one city
+			   to itself has to be zero */
+			adj_mat[i] = (int *) calloc(num, sizeof(int) * num);
+
+			for(j = 0; j < i; j++)
 			{
-				/* calloc is used to set every index to zero, this
-				   is advantageous because the time from one city
-				   to itself has to be zero */
-				adj_mat[i] = (int *) calloc(num, sizeof(int) * num);
+				scanf("%s", temp);
+				adj_mat[i][j] = atoi(temp);
 
-				for(j = 0; j < i; j++)
+				/* If the user inputs a number which is less than
+				   or equal to 0 or it is not an x, since we use
+				   the same variable to input numbers or 'x' atoi
+				   will return a 0 if x is entered, hence && is
+				   used in the if condition */
+				if(adj_mat[i][j] <= 0 && strcmp(temp, "x") != 0)
 				{
-					scanf("%s", temp);
-					adj_mat[i][j] = atoi(temp);
-
-					/* If the user inputs a number which is less than
-					   or equal to 0 or it is not an x, since we use
-					   the same variable to input numbers or 'x' atoi
-					   will return a 0 if x is entered, hence && is
-					   used in the if condition */
-					if(adj_mat[i][j] <= 0 && strcmp(temp, "x") != 0)
-					{
-						printf("Incorrect input, try again\n");
-						/* To break out of outer for loop */
-						i = num;
-						flag = 0;
-						break;
-					}
-					/* if the user enters x, then the adjacency matrix
-					   uses -1 to represent that a message cannot travel
-					   between those two cities */
-					else if(!strcmp(temp, "x"))
-						adj_mat[i][j] = -1;
+					printf("Incorrect input, try again\n");
+					return NULL;
 				}
+				/* if the user enters x, then the adjacency matrix
+				   uses -1 to represent that a message cannot travel
+				   between those two cities */
+				else if(!strcmp(temp, "x"))
+					adj_mat[i][j] = -1;
 			}
 		}
-	} while(!flag);
+	}
 
 	/* The first row of the adjacency matrix is not never
 	   entered by the user so it is just allocated here 
