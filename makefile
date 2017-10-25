@@ -14,3 +14,7 @@ clean:
 
 tar:
 	tar czvf imp_mess_soln.tar imp_mess_soln.* makefile README.md
+
+#Used for checking memory leaks
+memcheck:
+	valgrind --tool=memcheck --leak-check=full ./ImportantMessage
