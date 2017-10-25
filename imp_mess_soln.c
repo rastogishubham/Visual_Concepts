@@ -5,12 +5,12 @@
 int main(int argc, char * * argv)
 {
 	int size, minTime;
-	int * * temp = getAdjMatrix(&size);
-	if(temp == NULL)
+	int * * adj_mat = getAdjMatrix(&size);
+	if(adj_mat == NULL)
 		return 0;
-	minTime = findMinTime(temp, size);
+	minTime = findMinTime(adj_mat, size);
 	printf("The minimum time to get the message across is: %d\n", minTime);
-	destroyMatrix(temp, size);
+	destroyMatrix(adj_mat, size);
 	return 0;
 }
 
@@ -33,11 +33,16 @@ int * * getAdjMatrix(int * size)
 	if(num <= 0)
 	{
 		printf("Incorrect input, try again\n");
+		free(temp);
 		return NULL;
 	}
 	else
 	{
 		adj_mat = malloc(sizeof(int *) * num);
+		/* The first row of the adjacency matrix is not never
+	       entered by the user so it is just allocated here 
+	       instead */
+		adj_mat[0] = (int *) calloc(num, sizeof(int) * num);
 		printf("Enter adjacency matrix:\n");
 
 		for(i = 1; i < num; i++)
@@ -60,6 +65,8 @@ int * * getAdjMatrix(int * size)
 				if(adj_mat[i][j] <= 0 && strcmp(temp, "x") != 0)
 				{
 					printf("Incorrect input, try again\n");
+					destroyMatrix(adj_mat, (i + 1));
+					free(temp);
 					return NULL;
 				}
 				/* if the user enters x, then the adjacency matrix
@@ -70,14 +77,8 @@ int * * getAdjMatrix(int * size)
 			}
 		}
 	}
-
-	/* The first row of the adjacency matrix is not never
-	   entered by the user so it is just allocated here 
-	   instead */
-	adj_mat[0] = (int *) calloc(num, sizeof(int) * num);
 	* size = num;
 	free(temp);
-
 	/* This function call completes the upper 
 	   triangle of the adjacency matrix */
 	adj_mat = completeAdjMatrix(adj_mat, num);
